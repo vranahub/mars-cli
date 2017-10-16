@@ -1,0 +1,34 @@
+{
+  "name": "mars-cli",
+  "version": "0.6.3",
+  "author": "Vrana Hub",
+  "homepage": "http://vranahub.com.br/",
+  "description": "Awesome CLI for the Mars.js Framework!",
+  "license": "MIT",
+  "keywords": [
+    "mean",
+    "ionic",
+    "awesome"
+  ],
+  "private": false,
+  "bin": {
+    "mars": "./cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vranahub/mars-cli.git"
+  },
+  "scripts": {
+    "start": "node mars.js"
+  },
+  "dependencies": {
+    "colors": "1.1.2",
+    "yargs": "9.0.1",
+    "shelljs": "0.7.8",
+    "cross-env": "5.0.5"
+  },
+  "devDependencies": {},
+  "bugs": {
+    "url": "https://github.com/vranahub/mars-cli/issues"
+  }
+}
