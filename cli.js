@@ -5,6 +5,7 @@ const yargs = require('yargs');
 const shell = require('shelljs');
 let cwd = process.cwd();
 let params = yargs.argv;
+let excludedParams = ['_', '$0']
 
 let command = "";
 
@@ -15,14 +16,12 @@ function init() {
 }
 
 function parseParameters() {
+
   // Setting cross platform environment variables
   for (var key in params) {
-    if (key.indexOf('mars') > -1) {
-
-      if (command.indexOf('cross-env') == -1) // Appends the cross-env command in order to 
-        command = command.concat("cross-env "); // obtain cross platform environment vars
-
-      let value = params[key];
+    let value = params[key];
+    if ((excludedParams.indexOf(key) == -1) && value) {
+      command = command.indexOf("cross-env") == -1 ? command.concat("cross-env ") : command; // obtain cross platform environment vars
       command = command.concat(`${key}=${value} `);
     }
   }
