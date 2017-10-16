@@ -2,42 +2,44 @@
 
 const colors = require('colors');
 const yargs = require('yargs');
-const shell = require('shelljs');
-let cwd = process.cwd();
+let spawn = require('child_process').spawn;
+let fork = require('child_process').fork;
 let params = yargs.argv;
-let excludedParams = ['_', '$0']
+let excludedParams = ['_', '$0', 'help', 'version'];
+let marsApiCommands = ['api'];
 
 let command = "";
 
 function init() {
-  parseParameters(); // Gets the mars enviroment variables
-  parseCommand(); // Gets the selected command (e.g. 'server', 'build'...)
-  runCommand(); // Actually runs the command
+  let command = getCommand();
+  let subcommands = getSubcommands(); // Gets the selected command (e.g. 'server', 'build'...)
+  runCommand(command, subcommands, params); // Actually runs the command
 }
 
-function parseParameters() {
+function getCommand() {
+  let rootSubcommand = getSubcommands()._;
+  if (marsApiCommands.indexOf(rootSubcommand) > -1) {
 
-  // Setting cross platform environment variables
-  for (var key in params) {
-    let value = params[key];
-    if ((excludedParams.indexOf(key) == -1) && value) {
-      command = command.indexOf("cross-env") == -1 ? command.concat("cross-env ") : command; // obtain cross platform environment vars
-      command = command.concat(`${key}=${value} `);
-    }
+  } else {
+    return "ionic";
   }
 }
 
-function parseCommand() {
-  command = command.concat("ionic");
-  params._.forEach((subcommand) => {
-    command = command.concat(` ${subcommand}`);
-  });
-  command.concat(" --color always");
+function getSubcommands() {
+  return params._;
 };
 
-function runCommand() {
-  shell.exec(command);
-  console.log(command);
+function runCommand(command, subcommands, params) {
+  subcommands = subcommands || [];
+  for (var key in params) { // Appends the options to the subcommands
+    if (excludedParams.indexOf(key) == -1)
+      subcommands.push(`--${key} ${params[key]}`);
+  };
+
+  spawn(command, subcommands, {
+    stdio: "inherit",
+    env: Object.assign(process.env, params) // Adds the supplied options to environment variables
+  });
 }
 
 init();
