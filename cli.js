@@ -32,6 +32,7 @@ function parseCommand() {
   params._.forEach((subcommand) => {
     command = command.concat(` ${subcommand}`);
   });
+  command.concat(" --color always");
 };
 
 function runCommand() {
